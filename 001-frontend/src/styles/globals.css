@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  
+  /* Brand & Accent (from NVIDIA Ref) */
+  --primary: #76b900;
+  --primary-dark: #5a8d00;
+  
+  /* Surface - Dark Mode Dashboard */
+  --bg-app: #000000;
+  --bg-panel: #111111;
+  --bg-panel-hover: #1a1a1a;
+  
+  /* Borders (Hairline from NVIDIA) */
+  --hairline: #333333;
+  --hairline-strong: #5e5e5e;
+  
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a7a7a7;
+  --text-muted: #757575;
+  
+  /* Semantic */
+  --status-success: #76b900; /* NVIDIA Green */
+  --status-danger: #e52020;
+  --status-warning: #df6500;
+  --status-info: #0046a4;
+  
+  /* Geometry (Angular from NVIDIA) */
+  --rounded-none: 0px;
+  --rounded-sm: 2px;
+  --rounded-full: 50%;
+  
+  /* Spacing */
+  --space-xxs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-xxl: 32px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  outline: none;
+}
+
+option {
+  background-color: var(--bg-panel);
+  color: var(--text-primary);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--hairline-strong);
+  border-radius: var(--rounded-none);
+}
+
+/* Base Components - Merging Dashboard Needs + NVIDIA Style */
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--hairline);
+  border-radius: var(--rounded-sm);
+  padding: var(--space-xl);
+  position: relative;
+}
+
+.corner-square {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  background-color: var(--primary);
+}
+
+.button-primary {
+  background-color: var(--primary);
+  color: #000000;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--rounded-sm);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button-primary:hover {
+  background-color: var(--primary-dark);
+}
+
+.button-outline {
+  background-color: transparent;
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: 1px solid var(--text-secondary);
+  border-radius: var(--rounded-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button-outline:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Typography Hierarchy */
+.heading-lg { font-size: 24px; font-weight: 700; line-height: 1.25; }
+.heading-md { font-size: 20px; font-weight: 700; line-height: 1.25; }
+.card-title { font-size: 16px; font-weight: 700; line-height: 1.4; }
+.body-md    { font-size: 14px; font-weight: 400; line-height: 1.5; color: var(--text-secondary); }

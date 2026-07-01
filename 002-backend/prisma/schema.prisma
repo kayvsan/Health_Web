@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Monitor {
+  id               String           @id @default(uuid())
+  name             String
+  url              String
+  interval         Int              @default(60)
+  isActive         Boolean          @default(true)
+  checkUptime      Boolean          @default(true)
+  checkPerformance Boolean          @default(true)
+  checkContent     Boolean          @default(false)
+  contentSelector  String?
+  status           String           @default("unknown")
+  uptime           Float            @default(100.0)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  lastCheckedAt    DateTime?
+  
+  logs             MonitorLog[]
+  contentChanges   ContentChange[]
+  incidents        Incident[]
+
+  @@map("monitors")
+}
+
+model MonitorLog {
+  id           String   @id @default(uuid())
+  monitorId    String
+  monitor      Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  status       String   // "up", "down", "degraded"
+  responseTime Int      // in ms
+  dnsTime      Int?
+  tcpTime      Int?
+  tlsTime      Int?
+  ttfb         Int?
+  statusCode   Int?
+  errorMessage String?
+  createdAt    DateTime @default(now())
+
+  @@index([monitorId, createdAt])
+  @@map("monitor_logs")
+}
+
+model ContentChange {
+  id          String   @id @default(uuid())
+  monitorId   String
+  monitor     Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  hash        String   // Hash of the extracted content
+  content     String?  // Actual HTML/Text that changed (diff)
+  summary     String?  // Short summary
+  createdAt   DateTime @default(now())
+
+  @@index([monitorId, createdAt])
+  @@map("content_changes")
+}
+
+model Incident {
+  id          String    @id @default(uuid())
+  monitorId   String
+  monitor     Monitor   @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  type        String    // "downtime", "slow_response", "content_change"
+  severity    String    // "critical", "warning", "info"
+  message     String
+  status      String    @default("active") // "active", "resolved"
+  startedAt   DateTime  @default(now())
+  resolvedAt  DateTime?
+
+  @@index([monitorId, startedAt])
+  @@map("incidents")
+}
+
+model TelegramConfig {
+  id          String   @id @default(uuid())
+  label       String   @default("Default")
+  botToken    String
+  chatId      String
+  isActive    Boolean  @default(true)
+
+  alertOnDown     Boolean @default(true)
+  alertOnDegraded Boolean @default(true)
+  alertOnRecovery Boolean @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  notificationLogs TelegramNotificationLog[]
+
+  @@map("telegram_configs")
+}
+
+model TelegramNotificationLog {
+  id               String          @id @default(uuid())
+  telegramConfigId String
+  telegramConfig   TelegramConfig  @relation(fields: [telegramConfigId], references: [id], onDelete: Cascade)
+  incidentId       String?
+  monitorId        String?
+  monitorName      String
+  type             String          // "down", "degraded", "recovery"
+  message          String
+  success          Boolean         @default(true)
+  errorMessage     String?
+  sentAt           DateTime        @default(now())
+
+  @@index([telegramConfigId, sentAt])
+  @@index([monitorId, type, sentAt])
+  @@map("telegram_notification_logs")
+}
