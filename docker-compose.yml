@@ -48,7 +48,7 @@ services:
     container_name: health-frontend
     restart: unless-stopped
     ports:
-      - "80:80"        # HTTP
+      - "8080:80"        # HTTP (Port diubah agar tidak bentrok)
     depends_on:
       - health-backend
     networks:
