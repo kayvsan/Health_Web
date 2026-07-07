@@ -94,7 +94,7 @@ export default function Analytics() {
       '500': '#c0392b',
       '502': '#c0392b',
       '503': '#e74c3c',
-      'Timeout_Error': '#95a5a6'
+      'Timeout_Error': '#f800e8ff'
     };
     if (colorMap[code]) return colorMap[code];
     if (code.startsWith('2')) return '#2ecc71';
