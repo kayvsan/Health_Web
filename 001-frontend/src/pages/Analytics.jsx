@@ -197,7 +197,7 @@ export default function Analytics() {
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={statusData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+              <BarChart syncId="analyticsData" data={statusData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--hairline-strong)" vertical={false} />
                 <XAxis dataKey="time" stroke="var(--text-secondary)" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="var(--text-secondary)" fontSize={12} tickLine={false} axisLine={false} />
@@ -270,7 +270,7 @@ export default function Analytics() {
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={healthData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+              <BarChart syncId="analyticsData" data={healthData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--hairline-strong)" vertical={false} />
                 <XAxis dataKey="time" stroke="var(--text-secondary)" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="var(--text-secondary)" fontSize={12} tickLine={false} axisLine={false} />
@@ -319,7 +319,7 @@ export default function Analytics() {
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={responseTimeData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+              <LineChart syncId="analyticsData" data={responseTimeData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--hairline-strong)" vertical={false} />
                 <XAxis dataKey="time" stroke="var(--text-secondary)" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="var(--text-secondary)" fontSize={12} tickLine={false} axisLine={false} />
