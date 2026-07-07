@@ -88,10 +88,9 @@ router.get('/dashboard/response-chart', async (req, res) => {
       const daysDiff = diffMs / (24 * 60 * 60 * 1000);
 
       if (daysDiff <= 1) {
-        // 10-minute intervals for <= 24h
+        // Hourly for <= 24h
         const hours = date.getHours().toString().padStart(2, '0');
-        const tensOfMins = Math.floor(date.getMinutes() / 10) * 10;
-        timeKey = `${hours}:${tensOfMins.toString().padStart(2, '0')}`;
+        timeKey = `${hours}:00`;
       } else if (daysDiff <= 7) {
         // Hourly for <= 7d
         const options = { month: 'short', day: 'numeric' };
@@ -216,8 +215,8 @@ router.get('/dashboard/status-distribution', async (req, res) => {
       endDate = new Date(queryEndDate);
       endDate.setHours(23, 59, 59, 999);
     } else {
-      // Default fetch last 30 days
-      const timeAgo = 30 * 24 * 60 * 60 * 1000;
+      // Default fetch last 24 hours to fit hourly grouping nicely
+      const timeAgo = 24 * 60 * 60 * 1000;
       startDate = new Date(Date.now() - timeAgo);
       endDate = new Date();
     }
@@ -236,10 +235,12 @@ router.get('/dashboard/status-distribution', async (req, res) => {
     const groupedData = {};
 
     logs.forEach(log => {
-      // Group by day "DD MMM"
+      // Group by hour
       const date = new Date(log.createdAt);
       const options = { month: 'short', day: 'numeric' };
-      const timeKey = date.toLocaleDateString('en-US', options);
+      const dayStr = date.toLocaleDateString('en-US', options);
+      const hours = date.getHours().toString().padStart(2, '0');
+      const timeKey = `${dayStr} ${hours}:00`;
       
       if (!groupedData[timeKey]) {
         groupedData[timeKey] = { time: timeKey };
@@ -278,7 +279,7 @@ router.get('/dashboard/health-distribution', async (req, res) => {
       endDate = new Date(queryEndDate);
       endDate.setHours(23, 59, 59, 999);
     } else {
-      const timeAgo = 30 * 24 * 60 * 60 * 1000;
+      const timeAgo = 24 * 60 * 60 * 1000;
       startDate = new Date(Date.now() - timeAgo);
       endDate = new Date();
     }
@@ -299,7 +300,9 @@ router.get('/dashboard/health-distribution', async (req, res) => {
     logs.forEach(log => {
       const date = new Date(log.createdAt);
       const options = { month: 'short', day: 'numeric' };
-      const timeKey = date.toLocaleDateString('en-US', options);
+      const dayStr = date.toLocaleDateString('en-US', options);
+      const hours = date.getHours().toString().padStart(2, '0');
+      const timeKey = `${dayStr} ${hours}:00`;
       
       if (!groupedData[timeKey]) {
         groupedData[timeKey] = { time: timeKey };

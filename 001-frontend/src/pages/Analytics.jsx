@@ -108,7 +108,7 @@ export default function Analytics() {
       <div style={{ marginBottom: 'var(--space-xl)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 'var(--space-md)' }}>
         <div>
           <h1 className="heading-lg" style={{ textTransform: 'uppercase', letterSpacing: '1px' }}>Analytics</h1>
-          <p className="body-md" style={{ marginTop: 'var(--space-xs)' }}>Daily distribution of HTTP status codes and performance metrics.</p>
+          <p className="body-md" style={{ marginTop: 'var(--space-xs)' }}>Hourly distribution of HTTP status codes and performance metrics.</p>
         </div>
         <div style={{ display: 'flex', gap: 'var(--space-md)' }}>
           <input 
