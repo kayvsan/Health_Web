@@ -17,22 +17,32 @@ export const evaluateAndManageIncident = async (monitor, probeResult, newStatus)
   if (newStatus === 'down') {
     const existingDowntime = activeIncidents.find(i => i.type === 'downtime');
     if (!existingDowntime) {
-      activeIncident = await prisma.incident.create({
-        data: {
-          monitorId: monitor.id,
-          type: 'downtime',
-          severity: 'critical',
-          message: probeResult.errorMessage || 'Monitor went offline',
-          status: 'active'
-        }
+      // Check for 5 consecutive downs
+      const recentLogs = await prisma.monitorLog.findMany({
+        where: { monitorId: monitor.id },
+        orderBy: { createdAt: 'desc' },
+        take: 5
       });
-      isNew = true;
-      
-      // Send Telegram Alert
-      await sendTelegramAlert('down', monitor, {
-        errorMessage: probeResult.errorMessage,
-        statusCode: probeResult.statusCode,
-      }, activeIncident.id);
+      const isConsistentlyDown = recentLogs.length === 5 && recentLogs.every(log => log.status === 'down');
+
+      if (isConsistentlyDown) {
+        activeIncident = await prisma.incident.create({
+          data: {
+            monitorId: monitor.id,
+            type: 'downtime',
+            severity: 'critical',
+            message: probeResult.errorMessage || 'Monitor went offline',
+            status: 'active'
+          }
+        });
+        isNew = true;
+        
+        // Send Telegram Alert
+        await sendTelegramAlert('down', monitor, {
+          errorMessage: probeResult.errorMessage,
+          statusCode: probeResult.statusCode,
+        }, activeIncident.id);
+      }
     } else {
       activeIncident = existingDowntime;
     }
